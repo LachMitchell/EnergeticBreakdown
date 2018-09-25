@@ -21,8 +21,8 @@ shinyUI(fluidPage(
                numericInput("E12","25m #12",15.69),
                
                numericInput("A","First Coefficient Starting Value",1.5),
-               numericInput("B","First Coefficient Starting Value",-0.05),
-               numericInput("C","First Coefficient Starting Value",1.5),
+               numericInput("B","Second Coefficient Starting Value",-0.05),
+               numericInput("C","Third Coefficient Starting Value",1.5),
                
                actionButton("CalcButton1", "Calculate")
                
