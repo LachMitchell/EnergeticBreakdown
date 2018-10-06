@@ -1,60 +1,45 @@
-library(shiny)
+
 
 shinyUI(fluidPage(
   
   # App title ----
-  titlePanel("12x25m Test"),
+  titlePanel("Complete Energetic Breakdown"),
   
   # Sidebar panel for inputs ----
   sidebarPanel(("Data Input"),
-               numericInput("E1","25m #1",12),
-               numericInput("E2","25m #2",12.5),
-               numericInput("E3","25m #3",12.8),
-               numericInput("E4","25m #4",13.2),
-               numericInput("E5","25m #5",13.8),
-               numericInput("E6","25m #6",14.5),
-               numericInput("E7","25m #7",14.5),
-               numericInput("E8","25m #8",15),
-               numericInput("E9","25m #9",15.5),
-               numericInput("E10","25m #10",15.62),
-               numericInput("E11","25m #11",15.75),
-               numericInput("E12","25m #12",15.69),
-               
-               numericInput("A","First Coefficient Starting Value",1.5),
-               numericInput("B","Second Coefficient Starting Value",-0.05),
-               numericInput("C","Third Coefficient Starting Value",1.5),
-               
-               actionButton("CalcButton1", "Calculate")
+               numericInput("Mass","Mass (kg)",70),
+               numericInput("FFM","Fat Free Mass (kg)",45),
+               numericInput("iLa","Initial [La]",0.8),
+               numericInput("fLa","Final [La]",10.0),
+               numericInput("Time","Time (sec)",30.0),
+               numericInput("rVO2","Resting VO2 (ml/min)",900),
+               numericInput("fVO2","Final VO2 Pk",5000),
+               numericInput("iPCR","Initial [PCr] (mM/kg)",27.75),
+               numericInput("tauPCr","Tau (PCr)",23.3),
+               numericInput("tauVO2","Tau (PCr)",22.7),
+               numericInput("MassRatio","Body Mass:Active Muscle Mass Ratio",.3),
+               numericInput("TD1","Time Delay 1",5.49),
+               numericInput("LaC","Lactate:ml O2 Ratio",2.71)
+   
+
                
   ),
   # Main panel for displaying outputs ----
   mainPanel(
     
-    h3("12x25m Analysis App"),
-    
-    plotOutput("plot"),
-    
-    p("Time (sec)"),
-            
-            verbatimTextOutput("Time"),
-            ("Cumulative Time (sec)"),
-            verbatimTextOutput("CTime"),
-            ("Velocity (m/s)"),
-            verbatimTextOutput("V"),
-            ("Model Coefficients"),
-            verbatimTextOutput("coef1"),
-            verbatimTextOutput("coef2"),
-            verbatimTextOutput("coef3"),
-    ("Peak Velocity (m/s)"),
-    verbatimTextOutput("Peak"),
-    ("Critical Speed (m/s)"),
-            verbatimTextOutput("CS"),
-            ("D'"),
-            verbatimTextOutput("D"),
-    ("Drop off %"),
-    verbatimTextOutput("DropOff")
-            )
-))
-
-
+    h3("Complete Energetic Breakdown Analysis App"),
+    ("A1"),
+    verbatimTextOutput("A1"),
+    ("Total Aerobic Energy Contribution (kJ)"),
+    verbatimTextOutput("VO2kJ"),
+    ("Glycolytic Energy Contribution (kJ)"),
+    verbatimTextOutput("LakJ"),
+    ("Phosphocreatine Energy Contribution (kJ)"),
+    verbatimTextOutput("PCrkJ"),
+    ("Total Energy (kJ)"),
+    verbatimTextOutput("TotalkJ"),
+    ("Percentages - AER - GLY - PCR"),
+    verbatimTextOutput("Percentages")
+ 
+  )))
 

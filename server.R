@@ -1,233 +1,138 @@
-library(shiny)
-library(mosaic)
 library(cubature)
+library(shiny)
+
 
 shinyServer(
   
   function(input,output){
     
-    output$Time<-reactive({c(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11,input$E12)
-    })
-
     
-    output$CTime<-reactive({c(sum(input$E1),sum(input$E1,input$E2),sum(input$E1,input$E2,input$E3),sum(input$E1,input$E2,input$E3,input$E4),sum(input$E1,input$E2,input$E3,input$E4,input$E5),sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6),sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7),sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8),sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9),sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10),sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11),sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11,input$E12))})
-    output$V<-reactive({c(round(25/input$E1,2),round(25/input$E2,2),round(25/input$E3,2),round(25/input$E4,2),round(25/input$E5,2),round(25/input$E6,2),round(25/input$E7,2),round(25/input$E8,2),round(25/input$E9,2),round(25/input$E10,2),round(25/input$E11,2),round(25/input$E12,2))})
-    
-#    output$model<-renderPrint({
-      
-#      input$CalcButton1
-      
-#      isolate(nls(c(round(25/input$E1,2),round(25/input$E2,2),round(25/input$E3,2),round(25/input$E4,2),
-#                   round(25/input$E5,2),round(25/input$E6,2),round(25/input$E7,2),round(25/input$E8,2),
-#                   round(25/input$E9,2),round(25/input$E10,2),round(25/input$E11,2),round(25/input$E12,2))
-#                 ~(a*exp(b*c(
-#                   sum(input$E1),sum(input$E1,input$E2),sum(input$E1,input$E2,input$E3),
-#                   sum(input$E1,input$E2,input$E3,input$E4),sum(input$E1,input$E2,input$E3,input$E4,input$E5),
-#                   sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6),
-#                   sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7),
-#                   sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8),
-#                   sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9),
-#                   sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10),
-#                   sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11),
-#                   sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11,input$E12))
-#                 )+c),start=list(a=1.5,b=-0.05,c=1.5)  )  
-#              )
-#                            })
-    
-    
-    output$coef1<-renderPrint({
-      
-      input$CalcButton1
-      
-      c.time<-c(sum(input$E1),sum(input$E1,input$E2),sum(input$E1,input$E2,input$E3),
-      sum(input$E1,input$E2,input$E3,input$E4),sum(input$E1,input$E2,input$E3,input$E4,input$E5),
-      sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6),
-      sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7),
-      sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8),
-      sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9),
-      sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10),
-      sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11),
-      sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11,input$E12))
-      
-      vel<-c(round(25/input$E1,2),round(25/input$E2,2),round(25/input$E3,2),round(25/input$E4,2),
-             round(25/input$E5,2),round(25/input$E6,2),round(25/input$E7,2),round(25/input$E8,2),
-             round(25/input$E9,2),round(25/input$E10,2),round(25/input$E11,2),round(25/input$E12,2))
-      
-      isolate(coef(
-      nls(vel~(a*exp(b*c.time)+c),start=list(a=input$A,b=input$B,c=input$C)  )  )[1] )
-    
+    output$A1<-renderPrint({
       
       
+      A0<-input$rVO2
+      VO2<-c(input$rVO2,input$fVO2)
+      TimeM<-c(0,input$Time)
+      TD1<-input$TD1
+      tauVO2<-input$tauVO2
       
-      })
-    output$coef2<-renderPrint({
-      
-      input$CalcButton1
-      
-      c.time<-c(sum(input$E1),sum(input$E1,input$E2),sum(input$E1,input$E2,input$E3),
-                sum(input$E1,input$E2,input$E3,input$E4),sum(input$E1,input$E2,input$E3,input$E4,input$E5),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11,input$E12))
-      
-      vel<-c(round(25/input$E1,2),round(25/input$E2,2),round(25/input$E3,2),round(25/input$E4,2),
-             round(25/input$E5,2),round(25/input$E6,2),round(25/input$E7,2),round(25/input$E8,2),
-             round(25/input$E9,2),round(25/input$E10,2),round(25/input$E11,2),round(25/input$E12,2))
-      
-      isolate(coef(
-        nls(vel~(a*exp(b*c.time)+c),start=list(a=input$A,b=input$B,c=input$C)  )  )[2] )
-      
-      
-      
+     as.numeric(coef(nls(VO2~A0+A1*(1-exp(-1*((TimeM-TD1)/tauVO2))),start=list(A1=2000))))
       
     })
-    output$coef3<-renderPrint({
-      
-      input$CalcButton1
-      
-      c.time<-c(sum(input$E1),sum(input$E1,input$E2),sum(input$E1,input$E2,input$E3),
-                sum(input$E1,input$E2,input$E3,input$E4),sum(input$E1,input$E2,input$E3,input$E4,input$E5),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11,input$E12))
-      
-      vel<-c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-             25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12)
-      
-      isolate(coef(
-        nls(vel~(a*exp(b*c.time)+c),start=list(a=input$A,b=input$B,c=input$C)  )  )[3] )
+    
+    output$VO2kJ<-renderPrint({
       
       
+      A0<-input$rVO2
+      VO2<-c(input$rVO2,input$fVO2)
+      TimeM<-c(0,input$Time/60)
+      TD1<-input$TD1/60
+      tauVO2<-input$tauVO2/60
+      
+      A1<-as.numeric(coef(nls(VO2~A0+A1*(1-exp(-1*((TimeM-TD1)/tauVO2))),start=list(A1=2000))))
+      
+      modelVO2<-function(x){A0+A1*(1-exp(-1*((x-TD1)/tauVO2)))}
+      
+      
+     c((as.numeric(adaptIntegrate(modelVO2,upperLimit = input$Time/60,lowerLimit = TD1/60)[1])/1000)*20.9-((input$Time/60)*input$rVO2)/1000)
       
       
     })
     
-    output$CS<-reactive({
+    
+    
+    output$LakJ<-renderPrint({
       
-      round((sort(c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-             25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12),decreasing = TRUE)[11]
-      +sort(c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-              25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12),decreasing = TRUE)[12])/2,2)
-            
-      
+      LaNet<-input$fLa-input$iLa
+      LaO2<-LaNet*input$Mass*input$LaC
+      (LaO2/1000)*20.9
       
     })
     
-    output$D<-renderPrint({
+    output$PCrkJ<-renderPrint({
       
-      input$CalcButton1
       
-      c.time<-c(sum(input$E1),sum(input$E1,input$E2),sum(input$E1,input$E2,input$E3),
-                sum(input$E1,input$E2,input$E3,input$E4),sum(input$E1,input$E2,input$E3,input$E4,input$E5),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11,input$E12))
+      PCr<-input$iPCR
+      tauPCr<-input$tauPCr
+      M<-input$Mass*input$MassRatio
       
-      vel<-c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-             25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12)
+      modelPCr<-function(x){PCr*(1-exp(-1*(x/tauPCr)))*M}
       
-      upper<-sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11,input$E12)
-      lower<-input$E1
+      (modelPCr(input$Time)/6.25)*.468
+      
+    })
     
-      a<-coef(nls(vel~(a*exp(b*c.time)+c),start=list(a=input$A,b=input$B,c=input$C)  )  )[1] 
-      b<-coef(nls(vel~(a*exp(b*c.time)+c),start=list(a=input$A,b=input$B,c=input$C)  )  )[2]
-      c<-coef(nls(vel~(a*exp(b*c.time)+c),start=list(a=input$A,b=input$B,c=input$C)  )  )[3]
-      
-      CS<-(sort(c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-              25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12),decreasing = TRUE)[11]
-        +sort(c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-                25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12),decreasing = TRUE)[12])/2
-      
-      
-      model<-function(x){a*exp(b*x)+c}
-      
-      as.numeric(adaptIntegrate(model,upperLimit = upper,lowerLimit = lower)[1])-
-        (CS*(upper-lower))+(25-(CS*lower))
-      
+   output$TotalkJ<-renderPrint({
      
-           
-    })
+     
+     A0<-input$rVO2
+     VO2<-c(input$rVO2,input$fVO2)
+     TimeM<-c(0,input$Time/60)
+     TD1<-input$TD1/60
+     tauVO2<-input$tauVO2/60
+     
+     A1<-as.numeric(coef(nls(VO2~A0+A1*(1-exp(-1*((TimeM-TD1)/tauVO2))),start=list(A1=2000))))
+     
+     modelVO2<-function(x){A0+A1*(1-exp(-1*((x-TD1)/tauVO2)))}
+     
+     
+     AER<-c((as.numeric(adaptIntegrate(modelVO2,upperLimit = input$Time/60,lowerLimit = TD1/60)[1])/1000)*20.9-((input$Time/60)*input$rVO2)/1000)
+     
+     LaNet<-input$fLa-input$iLa
+     LaO2<-LaNet*input$Mass*input$LaC
+     GLYC<-(LaO2/1000)*20.9
+     
+     PCr<-input$iPCR
+     tauPCr<-input$tauPCr
+     M<-input$Mass*input$MassRatio
+     
+     modelPCr<-function(x){PCr*(1-exp(-1*(x/tauPCr)))*M}
+     
+     PCR<-(modelPCr(input$Time)/6.25)*.468
+     
+     AER+GLYC+PCR
+     
+   })
     
-    
-    
-      output$plot<-renderPlot({
-      
-      
-      c.time<-c(sum(input$E1),sum(input$E1,input$E2),sum(input$E1,input$E2,input$E3),
-                sum(input$E1,input$E2,input$E3,input$E4),sum(input$E1,input$E2,input$E3,input$E4,input$E5),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11),
-                sum(input$E1,input$E2,input$E3,input$E4,input$E5,input$E6,input$E7,input$E8,input$E9,input$E10,input$E11,input$E12))
-      
-      vel<-c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-             25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12)
-      
-      a<-coef(nls(vel~(a*exp(b*c.time)+c),start=list(a=input$A,b=input$B,c=input$C)  )  )[1] 
-      b<-coef(nls(vel~(a*exp(b*c.time)+c),start=list(a=input$A,b=input$B,c=input$C)  )  )[2]
-      c<-coef(nls(vel~(a*exp(b*c.time)+c),start=list(a=input$A,b=input$B,c=input$C)  )  )[3]
-      
-      CS<-(sort(c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-                  25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12),decreasing = TRUE)[11]
-           +sort(c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-                   25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12),decreasing = TRUE)[12])/2
-      
-      
-      model<-function(x){a*exp(b*x)+c}
-      
-      plot(c.time,vel,pch=20,bty="l",ylab="Velocity (m/s)",xlab="Time (sec)")
-      lines(c.time,model(c.time),lty=2,lwd=1.5)
-      lines(c.time,rep(CS,length(c.time)),lwd=2,lty=2,col="Orange2")
-      legend("topright",bty="n",legend = c("Velocity","Model Fit","Critical Speed"),pch=c(20,NA,NA),lty=c(NA,2,2),lwd=c(NA,1.5,2),col=c("black","black","orange2"))
-      
-      
-    })
-    
-      output$DropOff<-renderPrint({
-        
-        input$CalcButton1
-        
- 
-        vel<-c(25/input$E1)
-        
-      
-        CS<-(sort(c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-                    25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12),decreasing = TRUE)[11]
-             +sort(c(25/input$E1,25/input$E2,25/input$E3,25/input$E4,25/input$E5,25/input$E6,
-                     25/input$E7,25/input$E8,25/input$E9,25/input$E10,25/input$E11,25/input$E12),decreasing = TRUE)[12])/2
-        
-        round(((vel-CS)/vel)*100,1)
-        
-        
-        
-      })
-      
-      output$Peak<-renderPrint({
-        
-        input$CalcButton1
-        
-        
-        round(25/input$E1,2)
-        
-      
-        
-        
-        
-      })
-    
-    })
+   output$Percentages<-renderPrint({
+     
+
+       
+       
+       A0<-input$rVO2
+       VO2<-c(input$rVO2,input$fVO2)
+       TimeM<-c(0,input$Time/60)
+       TD1<-input$TD1/60
+       tauVO2<-input$tauVO2/60
+       
+       A1<-as.numeric(coef(nls(VO2~A0+A1*(1-exp(-1*((TimeM-TD1)/tauVO2))),start=list(A1=2000))))
+       
+       modelVO2<-function(x){A0+A1*(1-exp(-1*((x-TD1)/tauVO2)))}
+       
+       
+       AER<-c((as.numeric(adaptIntegrate(modelVO2,upperLimit = input$Time/60,lowerLimit = TD1/60)[1])/1000)*20.9-((input$Time/60)*input$rVO2)/1000)
+       
+       LaNet<-input$fLa-input$iLa
+       LaO2<-LaNet*input$Mass*input$LaC
+       GLYC<-(LaO2/1000)*20.9
+       
+       PCr<-input$iPCR
+       tauPCr<-input$tauPCr
+       M<-input$Mass*input$MassRatio
+       
+       modelPCr<-function(x){PCr*(1-exp(-1*(x/tauPCr)))*M}
+       
+       PCR<-(modelPCr(input$Time)/6.25)*.468
+       
+       Tot<-AER+GLYC+PCR
+       
+       c((AER/Tot)*100,(GLYC/Tot)*100,(PCR/Tot)*100)
+
+     
+     
+   })
+   
+   
+  })
+
+
